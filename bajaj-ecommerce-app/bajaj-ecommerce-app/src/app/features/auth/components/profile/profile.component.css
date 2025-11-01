@@ -1,0 +1,28 @@
+.card {
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.form-control:read-only {
+  background-color: #f8f9fa;
+}
+
+.border-primary {
+  border-color: #007bff !important;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem;
+  }
+}

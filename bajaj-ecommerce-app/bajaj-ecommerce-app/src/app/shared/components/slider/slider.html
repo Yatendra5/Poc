@@ -1,0 +1,27 @@
+<div class="slider">
+  <div class="slides" [style.transform]="'translateX(-' + activeIndex() * 100 + '%)'">
+    <figure class="slide" *ngFor="let slide of slides; let i = index">
+      <img [src]="slide" [alt]="'Slide ' + (i + 1)" loading="lazy" />
+    </figure>
+  </div>
+
+  <button type="button" class="control prev" (click)="goToPrevious()" aria-label="Previous slide">
+    ‹
+  </button>
+  <button type="button" class="control next" (click)="goToNext()" aria-label="Next slide">
+    ›
+  </button>
+
+  <div class="indicators" role="tablist">
+    <button
+      type="button"
+      class="indicator"
+      *ngFor="let slide of slides; let i = index"
+      [class.active]="i === activeIndex()"
+      (click)="goToSlide(i)"
+      [attr.aria-selected]="i === activeIndex()"
+      [attr.aria-label]="'Go to slide ' + (i + 1)"
+      role="tab"
+    ></button>
+  </div>
+</div>

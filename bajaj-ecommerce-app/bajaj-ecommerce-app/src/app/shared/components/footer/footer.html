@@ -1,0 +1,21 @@
+<footer class="footer-container">
+  
+ 
+
+  <!-- Main Footer Content -->
+  <div class="footer-content">
+    <div class="container-lg">
+      <div class="footer-columns">
+        <!-- Footer Sections -->
+        <div class="footer-column" *ngFor="let section of footerSections">
+          <h5 class="footer-title">{{ section.title }}</h5>
+          <ul class="footer-links">
+            <li *ngFor="let link of section.links">
+              <a href="#" class="footer-link">{{ link }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div> 
+</footer>

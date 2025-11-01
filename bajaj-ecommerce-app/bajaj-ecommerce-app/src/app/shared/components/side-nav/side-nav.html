@@ -1,0 +1,77 @@
+<!-- Backdrop -->
+<div class="sidebar-backdrop" [class.show]="isOpen()" (click)="closeNav()"></div>
+
+<!-- Side Navigation -->
+<nav class="side-nav" [class.open]="isOpen()">
+  <!-- Close Button (Mobile) -->
+  <button class="close-btn d-lg-none" (click)="closeNav()">✕</button>
+
+  <!-- Header -->
+  <div class="nav-header">
+    <h5 class="mb-0">Menu</h5>
+  </div>
+
+  <!-- Navigation Items -->
+  <div class="nav-items">
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="isLoading()">
+      <div class="spinner-sm"></div>
+      <span class="loading-text">Loading categories...</span>
+    </div>
+
+    <div *ngIf="!isLoading()">
+      <!-- ✅ HOME -->
+      <div class="nav-item">
+        <a routerLink="/slider" class="nav-link" (click)="closeNav()">
+          <span class="icon"><i class="bi bi-house-door"></i></span>
+          <span>Home</span>
+        </a>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="nav-item">
+        <a routerLink="/products" class="nav-link" (click)="closeNav()">
+          <span class="icon"><i class="bi bi-box-seam"></i></span>
+          <span>Products</span>
+        </a>
+      </div>
+
+      <!-- CATEGORIES -->
+      <div class="nav-item">
+        <a routerLink="/categories" class="nav-link" (click)="closeNav()">
+          <span class="icon"><i class="bi bi-grid"></i></span>
+          <span>Categories</span>
+        </a>
+      </div>
+
+      <hr class="nav-divider" />
+
+      <!-- ✅ ADMIN ONLY SECTION -->
+        @if(isAdmin==true){
+        <ng-container >
+        <div class="nav-item">
+          <a routerLink="/admin/add-category" class="nav-link" (click)="closeNav()">
+            <span class="icon"><i class="bi bi-plus-square"></i></span>
+            <span>Add Category</span>
+          </a>
+        </div>
+
+        <div class="nav-item">
+          <a routerLink="/admin/approve-orders" class="nav-link" (click)="closeNav()">
+            <span class="icon"><i class="bi bi-check2-circle"></i></span>
+            <span>Approve Orders</span>
+          </a>
+        </div>
+        <hr class="nav-divider" />
+      </ng-container>
+    }
+   
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="nav-footer">
+    <hr />
+    <a href="#" class="nav-link">@2025 Bajaj</a>
+  </div>
+</nav>

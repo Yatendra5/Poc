@@ -1,0 +1,98 @@
+<div class="home-container">
+  <bajaj-slider></bajaj-slider>
+
+  
+
+  <!-- Featured Products Section -->
+  <section class="featured-products-section py-5">
+    <div class="container-lg">
+     
+      @if (isLoadingProducts()) {
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading products...</span>
+          </div>
+        </div>
+      }
+
+      @if (!isLoadingProducts()) {
+        <div class="row g-4">
+          @for (product of featuredProducts(); track product._id) {
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+              <div class="product-card bg-white rounded shadow-sm overflow-hidden h-100 hover-lift">
+                <div class="product-image position-relative overflow-hidden">
+                  <img 
+                    [src]="product.images[0]" 
+                    [alt]="product.name"
+                    class="w-100 product-img"
+                    style="height: 220px; object-fit: cover;"
+                    loading="lazy">
+                  @if (product.discount > 0) {
+                    <div class="discount-badge">
+                      -{{ product.discount }}%
+                    </div>
+                  }
+                </div>
+                <div class="product-info p-3">
+                  <h6 class="product-name text-truncate mb-2" [title]="product.name">{{ product.name }}</h6>
+                  <p class="category-name text-muted small mb-2">{{ product.categoryId.name }}</p>
+                  
+                  <div class="price-section mb-2">
+                    <span class="current-price text-danger fw-bold fs-6">
+                      ₹{{ getDiscountedPrice(product.price, product.discount) | number:'1.0-0' }}
+                    </span>
+                    @if (product.discount > 0) {
+                      <span class="original-price text-muted text-decoration-line-through ms-2 small">
+                        ₹{{ product.price | number:'1.0-0' }}
+                      </span>
+                    }
+                  </div>
+                  
+                  <div class="rating mb-3 d-flex align-items-center">
+                    <div class="stars me-2">
+                      @for (star of getStarArray(product.rating); track $index) {
+                        <span 
+                          class="star"
+                          [class.full]="star === 1"
+                          [class.half]="star === 0.5"
+                          [class.empty]="star === 0">
+                          ★
+                        </span>
+                      }
+                    </div>
+                    <small class="text-muted">({{ product.numReviews }})</small>
+                  </div>
+                  
+                  <button
+                    class="btn btn-primary btn-sm w-100 mb-2"
+                    [routerLink]="['/products', product._id]"
+                  >
+                    View Details
+                  </button>
+                  <button class="btn btn-outline-primary btn-sm w-100"
+                          [disabled]="product.stock === 0 || isAddingToCart(product._id)"
+                          (click)="addToCart(product, $event)">
+                    <span *ngIf="isAddingToCart(product._id)" class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    {{ isAddingToCart(product._id) ? 'Adding...' : 'Add to Cart' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      @if (!isLoadingProducts() && featuredProducts().length === 0) {
+        <div class="text-center py-5">
+          <div class="empty-state">
+            <div class="empty-icon fs-1 mb-3">📦</div>
+            <h4>No Featured Products</h4>
+            <p class="text-muted">Check back later for featured products.</p>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+ 
+</div>

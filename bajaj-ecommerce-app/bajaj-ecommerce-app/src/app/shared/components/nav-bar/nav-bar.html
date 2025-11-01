@@ -1,0 +1,110 @@
+<header class="navbar-container sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <div class="container-lg d-flex align-items-center justify-content-between flex-wrap">
+
+      <!-- Mobile Menu Toggle Button -->
+     <div> <button
+        class="btn-mobile-menu d-lg-none me-2"
+        (click)="toggleSideNav()"
+        aria-label="Toggle navigation menu"
+      >
+        ☰
+      </button></div>
+
+      <!-- Logo (Always Visible) -->
+      <div><a
+        class="navbar-brand fw-bold d-flex align-items-center me-3"
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span class="brand-text text-white">Bajaj</span>
+      </a></div>
+
+      <!-- Search Bar -->
+      <form class="search-form flex-grow-1 mx-2" (ngSubmit)="onSearch()">
+        <div class="search-wrapper">
+          <input
+            type="text"
+            class="form-control search-input"
+            placeholder="Search products..."
+            [(ngModel)]="searchQuery"
+            name="search"
+          />
+          <button type="submit" class="btn-search">🔍</button>
+        </div>
+      </form>
+
+      <!-- Right Side (Cart + Auth) -->
+      <div class="d-flex align-items-center gap-2 gap-md-3">
+
+        <!-- Cart -->
+        <a
+          routerLink="/cart"
+          class="nav-link text-white position-relative px-2 d-flex align-items-center"
+        >
+          🛒
+          <span
+            class="badge bg-danger position-absolute top-0 start-100 translate-middle small"
+            *ngIf="(cartCount$ | async) as count"
+          >
+            {{ count }}
+          </span>
+        </a>
+
+        <!-- User Dropdown (If Logged In) -->
+        <div class="dropdown" *ngIf="currentUser$ | async as user">
+          <button
+            class="btn btn-link text-white dropdown-toggle d-flex align-items-center gap-1 px-2"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            👤 <span class="d-none d-md-inline small">{{ user.name }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+           
+            <li><a class="dropdown-item" routerLink="/orders">My Orders</a></li>
+           
+            <li><hr class="dropdown-divider" /></li>
+            <li><button class="dropdown-item" (click)="logout()">Logout</button></li>
+          </ul>
+        </div>
+
+        <!-- Login/Register (If Not Logged In) -->
+        <div class="d-flex align-items-center gap-2" *ngIf="!(currentUser$ | async)">
+          <a
+            routerLink="/auth/login"
+            class="btn btn-warning btn-sm px-2 py-1 fw-semibold"
+          >
+            Sign In
+          </a>
+          <a
+            routerLink="/auth/register"
+            class="btn btn-warning btn-sm px-2 py-1 fw-semibold"
+          >
+            Sign Up
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Search (Shown Only Below 576px) -->
+  <div class="mobile-search d-sm-none py-2 bg-white">
+    <div class="container-lg">
+      <form (ngSubmit)="onSearch()">
+        <div class="search-wrapper">
+          <input
+            type="text"
+            class="form-control search-input"
+            placeholder="Search..."
+            [(ngModel)]="searchQuery"
+            name="search"
+          />
+          <button type="submit" class="btn-search">🔍</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</header>

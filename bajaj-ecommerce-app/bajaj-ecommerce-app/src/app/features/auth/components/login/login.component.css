@@ -1,0 +1,44 @@
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.btn-primary {
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.btn-link {
+  color: #6c757d;
+  padding: 0;
+}
+
+.btn-link:hover {
+  color: #495057;
+}
+
+.form-control {
+  border-radius: 5px;
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+}
+
+.form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (max-width: 576px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+}

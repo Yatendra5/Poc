@@ -1,0 +1,170 @@
+<div class="product-details-container">
+    <div class="container-lg py-4">
+        <!-- Header with Back Button -->
+        <div class="header-section mb-4">
+            <button class="btn-back" (click)="goBack()">
+                ← Back to Products
+            </button>
+        </div>
+
+        @if (productData) {
+        <div class="row g-4">
+            <!-- Left Side: Product Images -->
+            <div class="col-lg-5">
+                <div class="images-gallery">
+                    @if (productData.images && productData.images.length > 0) {
+                        <div class="main-image-container">
+                            <img [src]="selectedImage() || productData.images[0]" 
+                                 alt="Product Image" 
+                                 class="main-image">
+                            @if (productData.discount > 0) {
+                                <div class="discount-badge">{{productData.discount}}% OFF</div>
+                            }
+                            @if (productData.isFeatured) {
+                                <div class="featured-badge">✨ Featured</div>
+                            }
+                        </div>
+                        
+                        @if (productData.images.length > 1) {
+                            <div class="thumbnail-gallery mt-3">
+                                @for (img of productData.images; track $index) {
+                                    <img [src]="img" 
+                                         alt="Thumbnail {{$index + 1}}" 
+                                         class="thumbnail"
+                                         [class.active]="selectedImage() === img || (!selectedImage() && $index === 0)"
+                                         (click)="selectImage(img)">
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Right Side: Product Info -->
+            <div class="col-lg-7">
+                <div class="product-info-section">
+                    <!-- Brand and Category -->
+                    <div class="breadcrumb-info mb-2">
+                        <span class="brand-tag">{{productData.brand}}</span>
+                        <span class="category-tag">{{productData.categoryId.name}}</span>
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="product-title mb-2">{{productData.name}}</h1>
+
+                    <!-- SKU -->
+                    <p class="sku-info text-muted mb-3">
+                        <small>SKU: <strong>{{productData.sku}}</strong></small>
+                    </p>
+
+                    <!-- Rating Stars Section -->
+                    <div class="rating-section mb-4 pb-4 border-bottom">
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <div class="stars-display">
+                                @for (star of getStarArray(productData.rating); track $index) {
+                                    @if (star === 1) {
+                                        <span class="star full">★</span>
+                                    }
+                                    @if (star === 0.5) {
+                                        <span class="star half">★</span>
+                                    }
+                                    @if (star === 0) {
+                                        <span class="star empty">★</span>
+                                    }
+                                }
+                            </div>
+                            <div class="rating-info">
+                                <span class="rating-value">{{productData.rating.toFixed(1)}}</span>
+                                <span class="reviews-count">({{productData.numReviews}} reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pricing Section -->
+                    <div class="pricing-section mb-4">
+                        <div class="price-display">
+                            @if (productData.discount > 0) {
+                                <div class="price-row">
+                                    <span class="original-price">₹ {{productData.price.toFixed(2)}}</span>
+                                    <span class="current-price">₹ {{getDiscountedPrice(productData.price, productData.discount).toFixed(2)}}</span>
+                                    <span class="you-save">Save ₹ {{getSavings(productData.price, productData.discount).toFixed(2)}}</span>
+                                </div>
+                            } @else {
+                                <div class="current-price-main">₹ {{productData.price.toFixed(2)}}</div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Stock Status -->
+                    <div class="stock-section mb-4">
+                        @if (productData.stock > 0) {
+                            <span class="stock-badge in-stock">
+                                ✓ In Stock ({{productData.stock}} available)
+                            </span>
+                        } @else {
+                            <span class="stock-badge out-of-stock">
+                                ✗ Out of Stock
+                            </span>
+                        }
+                    </div>
+
+                    <!-- Description -->
+                    <div class="description-section mb-4 pb-4 border-bottom">
+                        <p class="product-description">{{productData.description}}</p>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="details-section mb-4 pb-4 border-bottom">
+                        <h5 class="section-title mb-3">Product Details</h5>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Color:</span>
+                                <span class="detail-value">{{productData.attributes.color}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Material:</span>
+                                <span class="detail-value">{{productData.attributes.material}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Warranty:</span>
+                                <span class="detail-value">{{productData.attributes.warranty}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="actions-section">
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn-add-to-cart" 
+                                    [disabled]="productData.stock === 0"
+                                    (click)="addToCart()">
+                                 Add to Cart
+                            </button>
+                          
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        @else {
+            <div class="text-center py-5">
+                <div class="spinner-border" role="status" *ngIf="isLoading">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div *ngIf="!isLoading && hasError" class="alert alert-danger">
+                    <h5>⚠️ Error Loading Product</h5>
+                    <p>{{errorMessage}}</p>
+                    <button class="btn btn-primary mt-2" (click)="loadProductDetails()">
+                        🔄 Try Again
+                    </button>
+                </div>
+                <div *ngIf="!isLoading && !hasError" class="text-muted">
+                    <h5>Product not found</h5>
+                    <p>The requested product could not be loaded.</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

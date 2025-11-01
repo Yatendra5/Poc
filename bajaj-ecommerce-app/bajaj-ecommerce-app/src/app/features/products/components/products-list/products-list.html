@@ -1,0 +1,301 @@
+<div class="products-container">
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Loading products...</p>
+    </div>
+  }
+
+  <!-- Products List -->
+  @if (product && product.data.length > 0 && !isLoading()) {
+    <div class="container-lg py-4">
+      <div class="mb-4">
+        <bajaj-banner></bajaj-banner>
+      </div>
+      <div class="page-header mb-4">
+        <h1>{{ title() }}</h1>
+        <p class="text-muted">Showing {{ (currentPage() - 1) * itemsPerPage() + 1 }} - {{ Math.min(currentPage() * itemsPerPage(), totalItems()) }} of {{ totalItems() }} products</p>
+        
+        <!-- View Toggle Buttons -->
+        <div class="view-toggle mt-3">
+          <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="viewOptions" id="allProducts" [checked]="!groupByCategory() && !categoryId()" (change)="setViewMode('all')">
+            <label class="btn btn-outline-primary" for="allProducts">All Products</label>
+            
+            <input type="radio" class="btn-check" name="viewOptions" id="groupedProducts" [checked]="groupByCategory()" (change)="setViewMode('grouped')">
+            <label class="btn btn-outline-primary" for="groupedProducts">Group by Category</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category-wise Products Display -->
+      @if (groupByCategory() && uniqueCategories().length > 0) {
+        @for (category of uniqueCategories(); track category._id) {
+          <div class="category-section mb-5">
+            <div class="category-header d-flex justify-content-between align-items-center mb-3">
+              <h2 class="category-title">{{ category.name }}</h2>
+              <div class="category-info">
+                <span class="badge bg-secondary">{{ getCategoryProducts(category._id).length }} products</span>
+                <a [routerLink]="['/products']" [queryParams]="{categoryId: category._id}" class="btn btn-sm btn-outline-primary ms-2">
+                  View All in {{ category.name }}
+                </a>
+              </div>
+            </div>
+            
+            <!-- Products Grid for this category -->
+            <div class="row g-3">
+              @for (prod of getCategoryProducts(category._id).slice(0, 4); track prod._id) {
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                  <div class="product-card h-100 category-product">
+                    <!-- Category Badge -->
+                    <div class="product-badges">
+                      <span class="badge badge-category">{{ category.name }}</span>
+                      @if (prod.isFeatured) {
+                        <span class="badge badge-featured"> Featured</span>
+                      }
+                      @if (prod.discount > 0) {
+                        <span class="badge badge-discount">{{ prod.discount }}% OFF</span>
+                      }
+                    </div>
+
+
+                    <!-- Product Image -->
+                    <div class="product-image">
+                      <img [src]="prod.images[0]" [alt]="prod.name" class="img-fluid">
+                      @if (prod.stock === 0) {
+                        <div class="out-of-stock-overlay">Out of Stock</div>
+                      }
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info p-3 d-flex flex-column h-100">
+                      <!-- Brand -->
+                      <p class="product-brand">{{ prod.brand }}</p>
+
+                      <!-- Name -->
+                      <h5 class="product-name">{{ prod.name }}</h5>
+
+                      <!-- Rating -->
+                      <div class="product-rating mb-2">
+                        <div class="stars">
+                          @for (star of getStarArray(prod.rating); track $index) {
+                            @if (star === 1) {
+                              <span class="star full">★</span>
+                            }
+                            @if (star === 0.5) {
+                              <span class="star half">★</span>
+                            }
+                            @if (star === 0) {
+                              <span class="star empty">★</span>
+                            }
+                          }
+                        </div>
+                        <span class="review-count">({{ prod.numReviews }} reviews)</span>
+                      </div>
+
+                      <!-- Description -->
+                      <p class="product-description text-muted flex-grow-1">{{ prod.description }}</p>
+
+                      <!-- Price Section -->
+                      <div class="price-section mb-2">
+                        @if (prod.discount > 0) {
+                          <div class="price-row">
+                            <span class="original-price">₹ {{ prod.price }}</span>
+                            <span class="discounted-price fw-bold">₹ {{ getDiscountedPrice(prod.price, prod.discount) }}</span>
+                          </div>
+                        } @else {
+                          <p class="current-price fw-bold text-danger mb-0">₹ {{ prod.price }}</p>
+                        }
+                      </div>
+
+                      <!-- Stock Status -->
+                      <p class="stock-status" 
+                        [ngClass]="'stock-' + getStockStatus(prod.stock).class">
+                        {{ getStockStatus(prod.stock).label }}
+                      </p>
+
+                      <!-- Buttons -->
+                      <div class="button-group d-flex gap-2 mt-2">
+                        <button class="btn btn-primary btn-sm flex-grow-1" 
+                          [routerLink]="['/products', prod._id]"
+                          [disabled]="prod.stock === 0">
+                          View Details
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm"
+                          [disabled]="prod.stock === 0 || isAddingToCart(prod._id)"
+                          [title]="prod.stock === 0 ? 'Out of Stock' : 'Add to Cart'"
+                          (click)="addToCart(prod, $event)">
+                          <span *ngIf="isAddingToCart(prod._id)" class="spinner-border spinner-border-sm" role="status"></span>
+                          <span *ngIf="!isAddingToCart(prod._id)">add to cart</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+              @if (getCategoryProducts(category._id).length > 4) {
+                <div class="col-12 text-center">
+                  <a [routerLink]="['/products']" [queryParams]="{categoryId: category._id}" class="btn btn-outline-primary">
+                    View All {{ getCategoryProducts(category._id).length }} Products in {{ category.name }}
+                  </a>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      } @else {
+        <!-- Regular Products Grid -->
+        <div class="row g-3 mb-4">
+          @for (prod of paginatedProducts; track prod._id) {
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="product-card h-100">
+              <!-- Badges -->
+              <div class="product-badges">
+                @if (prod.isFeatured) {
+                  <span class="badge badge-featured"> Featured</span>
+                }
+                @if (prod.discount > 0) {
+                  <span class="badge badge-discount">{{ prod.discount }}% OFF</span>
+                }
+              </div>
+
+          
+
+              <!-- Product Image -->
+              <div class="product-image">
+                <img [src]="prod.images[0]" [alt]="prod.name" class="img-fluid">
+                @if (prod.stock === 0) {
+                  <div class="out-of-stock-overlay">Out of Stock</div>
+                }
+              </div>
+
+              <!-- Product Info -->
+              <div class="product-info p-3 d-flex flex-column h-100">
+                <!-- Brand -->
+                <p class="product-brand">{{ prod.brand }}</p>
+
+                <!-- Name -->
+                <h5 class="product-name">{{ prod.name }}</h5>
+
+                <!-- Rating -->
+                <div class="product-rating mb-2">
+                  <div class="stars">
+                    @for (star of getStarArray(prod.rating); track $index) {
+                      @if (star === 1) {
+                        <span class="star full">★</span>
+                      }
+                      @if (star === 0.5) {
+                        <span class="star half">★</span>
+                      }
+                      @if (star === 0) {
+                        <span class="star empty">★</span>
+                      }
+                    }
+                  </div>
+                  <span class="review-count">({{ prod.numReviews }} reviews)</span>
+                </div>
+
+                <!-- Description -->
+                <p class="product-description text-muted flex-grow-1">{{ prod.description }}</p>
+
+                <!-- Price Section -->
+                <div class="price-section mb-2">
+                  @if (prod.discount > 0) {
+                    <div class="price-row">
+                      <span class="original-price">₹ {{ prod.price }}</span>
+                      <span class="discounted-price fw-bold">₹ {{ getDiscountedPrice(prod.price, prod.discount) }}</span>
+                    </div>
+                  } @else {
+                    <p class="current-price fw-bold text-danger mb-0">₹ {{ prod.price }}</p>
+                  }
+                </div>
+
+                <!-- Stock Status -->
+                <p class="stock-status" 
+                  [ngClass]="'stock-' + getStockStatus(prod.stock).class">
+                  {{ getStockStatus(prod.stock).label }}
+                </p>
+
+                <!-- Buttons -->
+                <div class="button-group d-flex gap-2 mt-2">
+                  <button class="btn btn-primary btn-sm flex-grow-1" 
+                    [routerLink]="['/products', prod._id]"
+                    [disabled]="prod.stock === 0">
+                    View Details
+                  </button>
+                  <button class="btn btn-outline-warning btn-sm"
+                    [disabled]="prod.stock === 0 || isAddingToCart(prod._id)"
+                    [title]="prod.stock === 0 ? 'Out of Stock' : 'Add to Cart'"
+                    (click)="addToCart(prod, $event)">
+                    <span *ngIf="isAddingToCart(prod._id)" class="spinner-border spinner-border-sm" role="status"></span>
+                    <span *ngIf="!isAddingToCart(prod._id)">add to Cart</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+      }
+
+      <!-- Pagination (only show for non-grouped view) -->
+      @if (totalPages > 1 && !groupByCategory()) {
+        <nav class="pagination-container mb-4">
+          <ul class="pagination justify-content-center flex-wrap">
+            <!-- Previous Button -->
+            <li class="page-item" [class.disabled]="currentPage() === 1">
+              <button class="page-link" (click)="previousPage()" [disabled]="currentPage() === 1">
+                ← Previous
+              </button>
+            </li>
+
+            <!-- Page Numbers -->
+            @for (page of getPageNumbers(); track page) {
+              <li class="page-item" [class.active]="page === currentPage()">
+                <button class="page-link" (click)="goToPage(page)">
+                  {{ page }}
+                </button>
+              </li>
+            }
+
+            <!-- Next Button -->
+            <li class="page-item" [class.disabled]="currentPage() === totalPages">
+              <button class="page-link" (click)="nextPage()" [disabled]="currentPage() === totalPages">
+                Next →
+              </button>
+            </li>
+          </ul>
+        </nav>
+      }
+    </div>
+
+    <!-- Product Details Modal -->
+    @if (selectedProductId) {
+      <bajaj-product-details [productId]="selectedProductId"></bajaj-product-details>
+    }
+  }
+
+  <!-- Error State -->
+  @if (!isLoading() && hasError()) {
+    <div class="container text-center py-5">
+      <div class="alert alert-danger max-w-md mx-auto">
+        <h4>⚠️ Error Loading Products</h4>
+        <p>{{ errorMessage() }}</p>
+        <button class="btn btn-primary mt-2" (click)="retryLoad()">
+           Try Again
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading() && !hasError() && (!product || product.data.length === 0)) {
+    <div class="container text-center py-5">
+      <h4> Sorry! No products found</h4>
+      <p class="text-muted">Please try again later or browse other categories</p>
+    </div>
+  }
+</div>

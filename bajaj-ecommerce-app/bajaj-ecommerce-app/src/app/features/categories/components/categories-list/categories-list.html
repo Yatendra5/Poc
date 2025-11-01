@@ -1,0 +1,46 @@
+<div class="categories-container">
+  <bajaj-banner 
+    title="Shop by Categories" 
+    subtitle="Browse our wide range of product categories">
+  </bajaj-banner>
+  
+  <div class="categories-content">
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading()" class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading categories...</p>
+    </div>
+
+    <!-- Categories Grid -->
+    <div *ngIf="!isLoading() && categories().length > 0" class="categories-grid">
+      <div 
+        *ngFor="let category of categories()" 
+        class="category-card"
+        (click)="navigateToCategory(category)">
+        
+        <div class="category-image-container">
+          <img 
+            [src]="category.image" 
+            [alt]="category.name"
+            class="category-image"
+            loading="lazy">
+          <div class="category-overlay">
+            <span class="shop-now-text">Shop Now</span>
+          </div>
+        </div>
+        
+        <div class="category-info">
+          <h3 class="category-name">{{ category.name }}</h3>
+          <p class="category-slug">{{ category.slug }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading() && categories().length === 0" class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>No Categories Found</h3>
+      <p>We're working on adding more categories. Please check back later!</p>
+    </div>
+  </div>
+</div>

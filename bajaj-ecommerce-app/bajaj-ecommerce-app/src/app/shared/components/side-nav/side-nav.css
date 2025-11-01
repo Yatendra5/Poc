@@ -1,0 +1,354 @@
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.5);
+  z-index: 1045;
+  pointer-events: none;
+  backdrop-filter: blur(1px);
+}
+
+.sidebar-backdrop.show {
+  display: block;
+  pointer-events: auto;
+}
+
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min(280px, 82vw);
+  height: 100vh;
+  padding-top: calc(env(safe-area-inset-top, 0) + 0.5rem);
+  background-color: #fff;
+  box-shadow: 4px 0 24px rgba(15, 23, 42, 0.18);
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-nav.open {
+  transform: translateX(0);
+}
+
+.close-btn {
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0) + 0.5rem);
+  margin: 0 0.75rem 0.75rem;
+  margin-left: auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  background: rgba(15, 23, 42, 0.9);
+  border: none;
+  border-radius: 999px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+  z-index: 1050;
+}
+
+.nav-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+}
+
+.nav-header h5 {
+  font-weight: 600;
+  color: #232f3e;
+}
+
+.nav-items {
+  padding: 1rem 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-item,
+.category-item {
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.95rem;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: #f5f5f5;
+  color: #ff9500;
+}
+
+.nav-link .icon {
+  margin-right: 1rem;
+  font-size: 1.1rem;
+}
+
+.category-toggle {
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+.toggle-icon {
+  font-size: 0.75rem;
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.subcategories {
+  background-color: #f8f9fa;
+  border-left: 2px solid #ff9500;
+}
+
+.subcategory-link {
+  display: block;
+  padding: 0.75rem 1.5rem 0.75rem 3rem;
+  color: #555;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.subcategory-link:hover {
+  background-color: #f0f0f0;
+  color: #ff9500;
+  padding-left: 3.25rem;
+}
+
+.nav-footer {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  padding: 0;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+  margin-top: auto;
+}
+
+.nav-footer .nav-link {
+  font-size: 0.9rem;
+  color: #666;
+  padding: 0.75rem 1.5rem;
+}
+
+.nav-footer hr {
+  margin: 0.75rem 0;
+}
+
+/* Desktop View */
+@media (min-width: 992px) {
+  .sidebar-backdrop {
+    display: none !important;
+  }
+
+  .side-nav {
+    position: static;
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    border-right: none;
+    transform: none;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .close-btn {
+    display: none;
+  }
+
+  .nav-footer {
+    position: relative;
+    bottom: auto;
+    width: 100%;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .nav-items {
+    flex: 1;
+  }
+}
+
+/* Tablet View */
+@media (max-width: 991px) and (min-width: 768px) {
+  .side-nav {
+    width: 250px;
+  }
+
+  .nav-header h5 {
+    font-size: 1rem;
+  }
+
+  .nav-link {
+    padding: 0.85rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile View */
+@media (max-width: 767px) {
+  .side-nav {
+    width: 250px;
+  }
+
+  .subcategory-link {
+    padding: 0.6rem 1.2rem 0.6rem 2.5rem;
+    font-size: 0.85rem;
+  }
+
+  .nav-footer {
+    padding-bottom: 3rem;
+  }
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.spinner-sm {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #ff9500;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
+
+/* Category Navigation Styles */
+.nav-divider {
+  margin: 0.5rem 1.5rem;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+}
+
+.category-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.category-button:hover {
+  background-color: #f8f9fa;
+  color: #ff9500;
+  padding-left: 1.75rem;
+}
+
+.category-button:hover .nav-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.category-name {
+  flex: 1;
+  text-align: left;
+  font-weight: 500;
+}
+
+.nav-arrow {
+  font-size: 0.9rem;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+  color: #ff9500;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.empty-state .icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Active/Selected State */
+.nav-link.active,
+.category-button.active {
+  background-color: #fff5e6;
+  color: #ff9500;
+  border-right: 3px solid #ff9500;
+}
+
+.nav-link.active .icon,
+.category-button.active .icon {
+  color: #ff9500;
+}
+
+/* Hover Effects Enhancement */
+.nav-item:hover,
+.category-item:hover {
+  background-color: #fafafa;
+}
+
+/* Focus States for Accessibility */
+.nav-link:focus,
+.category-button:focus {
+  outline: 2px solid #ff9500;
+  outline-offset: -2px;
+}
+
+/* Scrollbar Styling */
+.side-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.side-nav::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.side-nav::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.side-nav::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
