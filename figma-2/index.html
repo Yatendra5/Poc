@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dukaan Dashboard</title>
+
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles/styles.css" />
+</head>
+<body>
+
+  <!-- Overlay for mobile -->
+  
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <i class="ri-store-2-line"></i>
+        <span>DUKAAN</span>
+        <button class="close-btn" id="closeSidebar"><i class="ri-close-line"></i></button>
+      </div>
+      <ul class="menu">
+        <li><i class="ri-dashboard-line"></i> <span>Dashboard</span></li>
+        <li><i class="ri-bar-chart-box-line"></i> <span>Statistics</span></li>
+        <li><i class="ri-wallet-3-line"></i> <span>Payment</span></li>
+        <li><i class="ri-exchange-dollar-line"></i> <span>Transactions</span></li>
+        <li><i class="ri-shopping-bag-3-line"></i> <span>Products</span></li>
+        <li><i class="ri-user-3-line"></i> <span>Customer</span></li>
+        <li><i class="ri-message-3-line"></i> <span>Messages</span></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="top-bar">
+        <div class="left">
+          <button class="menu-toggle" id="menuToggle">
+            <i class="ri-menu-line"></i>
+          </button>
+          <h2>Dashboard</h2>
+        </div>
+        <div class="date-range">28 Jan, 2021 - 28 Dec, 2021</div>
+      </div>
+
+      <!-- Cards -->
+      <div class="cards">
+        <div class="card">
+          <h3>Today's Sales</h3>
+          <p class="amount">$20.4K</p>
+          <p class="desc">We have sold 123 items</p>
+        </div>
+        <div class="card">
+          <h3>Today's Revenue</h3>
+          <p class="amount">$8.2K</p>
+          <p class="desc">Available to payout</p>
+        </div>
+        <div class="card">
+          <h3>In Escrow</h3>
+          <p class="amount">$18.2K</p>
+          <p class="desc">Available to payout</p>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts">
+        <div class="chart-box">
+          <h3>Total Revenue</h3>
+          <p class="increase">↑ 5% from last month</p>
+          <div class="chart-placeholder">
+            <img src="./images/chart1.png" alt="Bar Chart" />
+          </div>
+        </div>
+
+        <div class="chart-box">
+          <h3>Most Sold Items</h3>
+          <ul class="items">
+            <li><span>Jeans</span><div class="bar" style="width:70%"></div><span>70%</span></li>
+            <li><span>Shirts</span><div class="bar" style="width:40%"></div><span>40%</span></li>
+            <li><span>Belts</span><div class="bar" style="width:60%"></div><span>60%</span></li>
+            <li><span>Caps</span><div class="bar" style="width:80%"></div><span>80%</span></li>
+            <li><span>Others</span><div class="bar" style="width:20%"></div><span>20%</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Orders -->
+      <div class="orders">
+        <h3>Latest Orders</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Status</th>
+              <th>Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Iphone 13 Pro</td>
+              <td>#11232</td>
+              <td>Jun 29,2022</td>
+              <td>Afaq Karim</td>
+              <td><span class="status delivered">Delivered</span></td>
+              <td>$400.00</td>
+              <td>...</td>
+            </tr>
+            <tr>
+              <td>Macbook Pro</td>
+              <td>#11232</td>
+              <td>Jun 29,2022</td>
+              <td>Afaq Karim</td>
+              <td><span class="status pending">Pending</span></td>
+              <td>$288.00</td>
+              <td>...</td>
+            </tr>
+            <tr>
+              <td>Apple Watch</td>
+              <td>#11232</td>
+              <td>Jun 29,2022</td>
+              <td>Afaq Karim</td>
+              <td><span class="status canceled">Canceled</span></td>
+              <td>$500.00</td>
+              <td>...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+    const closeSidebar = document.getElementById("closeSidebar");
+    const overlay = document.getElementById("overlay");
+
+    function toggleSidebar() {
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("show");
+    }
+
+    menuToggle.addEventListener("click", toggleSidebar);
+    closeSidebar.addEventListener("click", toggleSidebar);
+    overlay.addEventListener("click", toggleSidebar);
+  </script>
+
+</body>
+</html>
